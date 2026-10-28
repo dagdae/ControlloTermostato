@@ -1,0 +1,48 @@
+name: Firmware
+
+on:
+  push:
+    paths: ["firmware/**", ".github/workflows/firmware.yml"]
+  pull_request:
+    paths: ["firmware/**", ".github/workflows/firmware.yml"]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Test della logica (PC)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: make -C firmware/test
+
+  build:
+    name: Compila ${{ matrix.project }} (${{ matrix.env }}) ${{ matrix.label }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { project: controller, env: esp32dev, flags: "", label: "" }
+          - { project: sensor_node, env: xiao_esp32c6, flags: "", label: "" }
+          - { project: sensor_node, env: xiao_esp32c6, flags: "-DNODE_SENSOR=2", label: "NTC" }
+          - { project: sensor_node, env: xiao_esp32c3, flags: "", label: "" }
+          - { project: sensor_node, env: esp32dev, flags: "", label: "" }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/cache@v4
+        with:
+          path: ~/.platformio
+          key: pio-${{ runner.os }}-${{ hashFiles('firmware/*/platformio.ini') }}
+      - run: pip install --upgrade platformio
+      - name: pio run
+        env:
+          PLATFORMIO_BUILD_FLAGS: ${{ matrix.flags }}
+        run: pio run -d firmware/${{ matrix.project }} -e ${{ matrix.env }}
+      - uses: actions/upload-artifact@v4
+        if: matrix.label == ''
+        with:
+          name: firmware-${{ matrix.project }}-${{ matrix.env }}
+          path: firmware/${{ matrix.project }}/.pio/build/${{ matrix.env }}/firmware.bin
