@@ -79,7 +79,7 @@ void wifiLoop(uint64_t now) {
   const bool connected = WiFi.status() == WL_CONNECTED;
   if (connected && !wasConnected) {
     app.events.add(now, "Wi-Fi connesso a %s, IP %s, canale %d", app.cfg.wifiSsid,
-                   WiFi.localIP().toString().c_str(), WiFi.channel());
+                   WiFi.localIP().toString().c_str(), static_cast<int>(WiFi.channel()));
     Serial.printf("[wifi] connesso: http://%s/  oppure http://%s.local/\n", WiFi.localIP().toString().c_str(),
                   app.cfg.hostname);
   } else if (!connected && wasConnected) {

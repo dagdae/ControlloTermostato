@@ -23,7 +23,7 @@ class WiFiClass {
   IPAddress localIP();
   IPAddress softAPIP();
   int8_t RSSI();
-  uint8_t channel();
+  int32_t channel();  // nel core 3.x restituisce int32_t
   uint8_t* macAddress(uint8_t* mac);
   bool softAP(const char* ssid, const char* passphrase = nullptr, int channel = 1, int ssid_hidden = 0,
               int max_connection = 4);
