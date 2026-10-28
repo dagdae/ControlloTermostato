@@ -104,6 +104,13 @@ tutta l'elettronica sulla parete:
 * Il legno conduce pochissimo il calore (circa 0,15 W/m·K, contro gli oltre 40 della
   ghisa): l'elettronica sulla parete resta a temperatura ambiente.
 
+**Semi-contatto:** in punta all'asticella, invece della sonda, si può mettere un
+MLX90614 a 2-5 cm dalla ghisa, senza toccarla. A quella distanza va bene anche la
+versione economica GY-906-BAA (90°). Due limiti: il sensore sta nell'aria calda davanti
+al termosifone (va bene fino a 85 °C, ma la misura è meno stabile) e il cavo I2C non
+deve superare 1 m, quindi la centralina deve stare vicino al termosifone. Nella maggior
+parte dei casi conviene la DCI puntata da lontano o la sonda a contatto.
+
 ## Nodo a batteria (configurazione B)
 
 ```

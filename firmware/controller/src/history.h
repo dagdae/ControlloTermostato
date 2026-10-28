@@ -10,7 +10,7 @@
 template <int N>
 class History {
  public:
-  static const int16_t kInvalid = INT16_MIN;
+  static constexpr int16_t kInvalid = INT16_MIN;
   struct Point {
     int16_t tempX10;  // decimi di grado, kInvalid se non disponibile
     uint8_t flags;    // bit0 riscaldamento consentito, bit2-3 stato, bit4-5 modalita'
