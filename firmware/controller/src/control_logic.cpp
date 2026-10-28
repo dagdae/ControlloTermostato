@@ -90,6 +90,14 @@ void Controller::onReading(uint64_t nowMs, bool valid, float tempC) {
   haveValid_ = true;
 }
 
+void Controller::resetSensor(uint64_t nowMs) {
+  haveValid_ = false;
+  lastValidMs_ = nowMs;
+  fault_ = false;
+  deb_.reset();
+  forceMaxDeb_.reset();
+}
+
 void Controller::update(uint64_t nowMs) {
   fault_ = nowMs - lastValidMs_ > static_cast<uint64_t>(p_.sensorTimeoutS) * 1000ULL;
   // Piu' transizioni nello stesso istante si risolvono subito, senza far

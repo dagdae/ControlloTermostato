@@ -21,8 +21,8 @@ struct TempReading {
 class TempInput {
  public:
   void begin(const AppSettings& s);
-  // Da richiamare quando cambiano le impostazioni.
-  void reconfigure(const AppSettings& s);
+  // Da richiamare quando cambiano le impostazioni. Restituisce true se e' cambiata la sorgente.
+  bool reconfigure(const AppSettings& s);
   // Da chiamare spesso; restituisce true quando *out contiene una nuova lettura.
   bool poll(uint64_t nowMs, TempReading* out);
 

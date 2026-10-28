@@ -20,8 +20,9 @@ void TempInput::begin(const AppSettings& s) {
   reconfigure(s);
 }
 
-void TempInput::reconfigure(const AppSettings& s) {
-  if (s.source != source_) {
+bool TempInput::reconfigure(const AppSettings& s) {
+  const bool changed = s.source != source_;
+  if (changed) {
     irMedian_.reset();
     irRawMedian_.reset();
     dsConverting_ = false;
@@ -33,6 +34,7 @@ void TempInput::reconfigure(const AppSettings& s) {
   remoteTimeoutMs_ = static_cast<uint64_t>(s.timeoutRemoteS) * 1000ULL;
   if (source_ == TempSource::InfraredMlx && !i2cStarted_) startI2c();
   irMedian_.reset();  // nuova emissivita'/offset: riparte la mediana
+  return changed;
 }
 
 void TempInput::startI2c() {

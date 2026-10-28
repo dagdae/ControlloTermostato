@@ -242,7 +242,10 @@ void trackChanges(uint64_t now) {
 
 void App::applySettings(uint64_t now) {
   ctl.setParams(paramsFor(cfg));
-  input.reconfigure(cfg);
+  if (input.reconfigure(cfg)) {
+    ctl.resetSensor(now);
+    lastReading = TempReading();
+  }
   act.reconfigure(cfg);
   ctl.update(now);
 }

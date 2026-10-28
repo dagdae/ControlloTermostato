@@ -285,6 +285,22 @@ static void testLockoutStaysBlockedOnFault() {
   CHECK(!s.allowed());
 }
 
+static void testResetSensorGivesGrace() {
+  Params p;
+  p.sensorTimeoutS = 120;
+  Sim s(p);
+  s.run(25, 51);
+  CHECK(!s.allowed());
+  s.run(110, 0, false);  // la vecchia sorgente tace da quasi 2 minuti
+  s.c.resetSensor(s.now);
+  s.run(60, 0, false);  // la nuova sorgente non ha ancora letto nulla
+  CHECK(!s.c.sensorFault());
+  CHECK(!s.allowed());  // resta in pausa, nessuno scatto del rele'
+  CHECK(!s.c.hasTemperature());
+  s.run(25, 29);
+  CHECK(s.allowed());
+}
+
 static void testBootGracePeriod() {
   Params p;
   p.sensorTimeoutS = 120;
@@ -530,6 +546,7 @@ int main() {
       {"guasto sensore -> blocca", testSensorFaultBlocksHeating},
       {"blocco resta con sensore guasto", testLockoutStaysBlockedOnFault},
       {"periodo di grazia all'avvio", testBootGracePeriod},
+      {"periodo di grazia al cambio di sorgente", testResetSensorGivesGrace},
       {"modalita' manuali", testManualModes},
       {"ritorno in automatico", testBackToAutoRestartsCycle},
       {"avvio in blocco", testBeginWithLockout},

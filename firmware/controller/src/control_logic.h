@@ -80,6 +80,9 @@ class Controller {
 
   // Nuova lettura dal sensore (valid=false se la lettura e' fallita).
   void onReading(uint64_t nowMs, bool valid, float tempC);
+  // Cambio di sorgente: dimentica l'ultima lettura e riparte il periodo di grazia,
+  // cosi' una lettura vecchia non fa scattare il guasto sensore.
+  void resetSensor(uint64_t nowMs);
   // Da chiamare spesso: fa avanzare timer e stati e ricalcola l'uscita.
   void update(uint64_t nowMs);
 
